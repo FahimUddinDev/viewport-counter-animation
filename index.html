@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- vendor-css -->
+    <link rel="stylesheet" href="../css/swiper10-bundle.min.css" />
+    <link rel="stylesheet" href="../css/aos-3.0.0.css" />
+    <link rel="stylesheet" href="../css/select2.min.css" />
+    <link rel="stylesheet" href="../css//lity.min.css" />
+
+    <title>Sociro - Social Booking Website</title>
+
+    <!-- custom-css -->
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+
+  <body>
+    <!-- counter  -->
+    <div
+      class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-14"
+      id="counter-section"
+    >
+      <!-- count items  -->
+      <div class="">
+        <h2
+          class="font-bold text-primary-300 counter"
+          data-target="50"
+          data-suffix="+"
+        >
+          0
+        </h2>
+      </div>
+      <!-- count items  -->
+      <div class="">
+        <h2
+          class="font-bold text-primary-300 counter"
+          data-target="200"
+          data-suffix="M"
+        >
+          0
+        </h2>
+      </div>
+      <!-- count items  -->
+      <div class="">
+        <h2
+          class="font-bold text-primary-300 counter"
+          data-target="5"
+          data-suffix="/5"
+        >
+          0
+        </h2>
+      </div>
+      <!-- count items  -->
+      <div class="">
+        <h2
+          class="font-bold text-primary-300 counter"
+          data-target="99.8"
+          data-suffix="%"
+        >
+          0
+        </h2>
+      </div>
+    </div>
+
+    <!-- All Script  -->
+
+    <script>
+      // counter
+      document.addEventListener("DOMContentLoaded", function () {
+        // Function to check if element is in viewport
+        function isInViewport(element) {
+          if (!element) return false;
+          const rect = element.getBoundingClientRect();
+          return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <=
+              (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <=
+              (window.innerWidth || document.documentElement.clientWidth)
+          );
+        }
+
+        // Get all counter elements
+        const counterSection = document.getElementById("counter-section");
+        const counters = document.querySelectorAll(".counter");
+        let hasAnimated = false;
+
+        // Function to animate counter
+        function animateCounter() {
+          if (counterSection && isInViewport(counterSection) && !hasAnimated) {
+            hasAnimated = true;
+
+            counters.forEach((counter) => {
+              const target = parseFloat(counter.getAttribute("data-target"));
+              const suffix = counter.getAttribute("data-suffix") || "";
+              const duration = 2000; // Animation duration in milliseconds
+              const step = target / (duration / 16); // 60fps
+              let current = 0;
+
+              // Handle decimal values
+              const isDecimal = target % 1 !== 0;
+              const decimalPlaces = isDecimal
+                ? (target.toString().split(".")[1] || "").length
+                : 0;
+
+              const timer = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                  current = target;
+                  clearInterval(timer);
+                }
+
+                // Format the number based on whether it has decimals
+                const displayValue = isDecimal
+                  ? current.toFixed(decimalPlaces)
+                  : Math.floor(current);
+                counter.textContent = displayValue + suffix;
+              }, 16);
+            });
+          }
+        }
+
+        // Only set up event listeners if the counter section exists
+        if (counterSection) {
+          // Check on scroll and initial load
+          window.addEventListener("scroll", animateCounter);
+          // Initial check
+          animateCounter();
+        }
+      });
+    </script>
+  </body>
+</html>
